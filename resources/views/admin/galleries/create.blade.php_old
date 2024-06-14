@@ -1,0 +1,189 @@
+@extends('layouts.admin')
+<script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
+
+@section('content')
+
+<div class="card">
+    <div class="card-header">
+     Testimonials
+    </div>
+
+    <div class="card-body">
+        <form action="{{ route("admin.galleries.store") }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                 <label for="name">Category*</label>
+                 
+                   
+                           <select id"showbanner"  class="form-control">
+                               <option value="left">Left</option>
+                               <option value="middle">Middle</option>
+                               <option value="middle">Right</option>
+                           </select>
+                
+                
+                </div>
+             <div class="form-group ">
+                <label for="name">Title*</label>
+               <input type="text" id="name" name="title" class="form-control"  required>
+                   
+            </div>
+          <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                <label for="name">Name*</label>
+               <input type="text" id="name" name="name" class="form-control"  required>
+                   
+            </div>
+         
+        <div class="form-group " id="dvPassport" >
+                <label for="name">Banner imageM*</label>
+                <input type="file" name="image" class="img form-control"> 
+            </div>
+        <div id="dvPassport2" style="display: none">  
+        <div class="form-group " >
+                <label for="name">Image Type*</label>
+                <select id"showbanner2"  class="form-control">
+                               <option value="small">Small</option>
+                               <option value="large">Large</option>
+                               
+                           </select> 
+            </div>
+             <div class="form-group" id="smallPassport">
+                <label for="name">Small Banner imageL*</label>
+                <input type="file" name="image2" class="img form-control"> 
+            </div>
+             <div class="form-group " id="largePassport" style="display: none">
+                <label for="name">Large Banner imageL*</label>
+                <input type="file" name="image3" class="img form-control"> 
+            </div>
+            
+            
+            </div>
+            <div class="form-group " id="dvPassport3" style="display: none">
+                <label for="name">Banner imageL*</label>
+                <input type="file" name="image3" class="img form-control"> 
+            </div>
+            
+            <div>
+                <input class="btn btn-danger" id="leftButton" type="submit" value="{{ trans('global.save') }}">
+                  <input class="btn btn-danger" type="button" value="Back" onClick="window.location.href = '{{ url("/admin/galleries") }}'">
+            
+            </div>
+        </form>
+
+
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+     // ONCHANGE
+     $(document).on('change', $("#showbanner"), function(el) {
+        
+        var val = $(el.target).val();
+        // console.log(val);
+        if (val == "middle"){
+            // alert("middle");
+            $("#dvPassport").show();
+            $("#dvPassport2").hide();
+            $("#dvPassport3").hide();
+        }
+        else if (val == "left"){
+            // alert("left");
+            $("#dvPassport").hide();
+            $("#dvPassport2").show();
+            $("#dvPassport3").hide();
+        }
+        else if (val == "righr"){
+            // alert("left");
+            $("#dvPassport").hide();
+            $("#dvPassport").hide();
+            $("#dvPassport3").show();
+        }
+    });
+    
+     $(document).on('change', $("#showbanner2"), function(el) {
+        
+        var val = $(el.target).val();
+        // console.log(val);
+        if (val == "small"){
+            // alert("middle");
+            $("#smallPassport").show();
+            $("#largePassport").hide();
+           
+        }
+        else if (val == "large"){
+            // alert("left");
+            $("#smallPassport").hide();
+            $("#largePassport").show();
+            
+        }
+        
+    });
+    
+    
+    
+        //     function showbanner(){
+        //     var banner = $(this).val();
+        //     console.log(banner);
+        // }
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+       
+        
+        
+        
+        $("#leftButton").prop('disabled', true);
+        
+        var _URL = window.URL || window.webkitURL;
+    
+        // left image validation
+       function readURLLeft(input) {
+            var src = $(input).attr('src');
+            $(".left_img").removeAttr("src");
+            $(".left_img").attr("src", src);
+            $("#leftButton").prop('disabled', false);
+        };
+        
+        $(".img").change(function(){
+            var file, img;
+            if ((file = this.files[0])) {
+                img = new Image();
+                
+                img.onload = function(){
+                    if(this.width > 316 || this.height > 402 ){
+                        alert("Please upload image in this dimension: 316x420px and uploaded size is " + this.width+'x'+this.height+' px');
+                         $("#leftButton").prop('disabled', true);
+                    }
+                    else if(this.width < 316 || this.height < 402){
+                        alert("Please upload image in this dimension: 316x420px and uploaded size is " + this.width+'x'+this.height+' px');
+                         $("#leftButton").prop('disabled', true);
+                    }
+                    else if(this.width === 316 && this.height === 402){
+                        readURLLeft(this); 
+                    }
+                };
+                img.onerror = function() {
+                     alert( "not a valid file: " + file.type);
+                };
+                img.src = _URL.createObjectURL(file);
+            }
+        });
+       
+    }); 
+    
+    // function showhidediv1(){
+    //     console.log('Worked');
+    //     var valthi = $(this).val();;
+    //     console.log(valthi);
+    //     if('valuethis' == "N"){
+    //         alert("n is clicked");
+    //     }
+    //     else if('valuethis' == "Y"){
+    //         alert("Y is clicked");
+    //     }
+    // }
+</script>
+@endsection
